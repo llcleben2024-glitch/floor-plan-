@@ -33,23 +33,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Noto Sans JP'
 #scale-select{font-size:11px;padding:3px 6px;border:1px solid #7dd3fc;border-radius:6px;background:#fff;color:#0369a1}
 #scale-ruler{flex:1;display:flex;align-items:center;gap:4px}
 .ruler-line{height:6px;background:#0ea5e9;border-radius:2px}
+
+/* ─── メインエリア（キャンバス＋サイドパネル） ─── */
+#main-area{flex:1;display:flex;overflow:hidden;position:relative}
 #canvas-wrap{flex:1;overflow:hidden;position:relative;background:#fff}
 canvas{display:block;touch-action:none;cursor:crosshair}
-#props{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;padding:10px 12px;display:none;z-index:20;border-radius:14px 14px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,0.1)}
-#props h3{font-size:12px;font-weight:600;color:#374151;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
-#props-close{font-size:20px;cursor:pointer;color:#9ca3af;line-height:1;background:none;border:none}
-.pr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.pr label{font-size:11px;color:#6b7280;min-width:34px;flex-shrink:0}
-#lbl-input{flex:1;border:1px solid #d1d5db;border-radius:8px;padding:7px 9px;font-size:13px;color:#111827;background:#fff}
-.clr-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
-.clr-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#6b7280}
-input[type=color]{width:38px;height:34px;border:1px solid #d1d5db;border-radius:7px;padding:2px;cursor:pointer;background:#fff}
-.rot-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.rot-btn{display:flex;align-items:center;justify-content:center;width:44px;height:36px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:18px;color:#374151}
+
+/* ─── サイドパネル（右側固定） ─── */
+#props{width:0;background:#fff;border-left:1px solid #e5e7eb;overflow:hidden;transition:width 0.2s ease;flex-shrink:0;display:flex;flex-direction:column}
+#props.open{width:160px}
+#props-inner{width:160px;padding:10px;overflow-y:auto;flex:1}
+#props-inner h3{font-size:11px;font-weight:700;color:#374151;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+#props-close{font-size:16px;cursor:pointer;color:#9ca3af;line-height:1;background:none;border:none;padding:0}
+.pr{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.pr label{font-size:10px;color:#6b7280}
+#lbl-input{width:100%;border:1px solid #d1d5db;border-radius:7px;padding:6px 8px;font-size:12px;color:#111827;background:#fff}
+.size-row{display:flex;gap:4px;margin-bottom:8px}
+.size-item{flex:1;display:flex;flex-direction:column;gap:3px}
+.size-item label{font-size:10px;color:#6b7280}
+.size-input{width:100%;border:1px solid #d1d5db;border-radius:7px;padding:5px 6px;font-size:12px;color:#111827;background:#fff;text-align:center}
+.clr-row{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.clr-item{display:flex;flex-direction:column;gap:3px;align-items:center;font-size:10px;color:#6b7280}
+input[type=color]{width:36px;height:30px;border:1px solid #d1d5db;border-radius:6px;padding:1px;cursor:pointer;background:#fff}
+.rot-row{display:flex;align-items:center;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+.rot-row label{font-size:10px;color:#6b7280;width:100%}
+.rot-btn{display:flex;align-items:center;justify-content:center;flex:1;height:32px;border:1px solid #d1d5db;border-radius:7px;background:#fff;cursor:pointer;font-size:14px;color:#374151}
 .rot-btn:active{background:#f3f4f6}
-.rot-val{font-size:12px;color:#374151;min-width:36px;text-align:center}
-.del-btn{width:100%;height:42px;border:1.5px solid #ef4444;border-radius:10px;color:#dc2626;background:transparent;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
+.rot-val{font-size:11px;color:#374151;text-align:center;width:100%;margin-top:2px}
+.del-btn{width:100%;height:38px;border:1.5px solid #ef4444;border-radius:9px;color:#dc2626;background:transparent;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;margin-top:4px}
 .del-btn:active{background:#fef2f2}
+
+/* ─── テンプレートモーダル ─── */
 #tpl-modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:none;align-items:flex-end;justify-content:center}
 #tpl-modal.open{display:flex}
 #tpl-sheet{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:80dvh;overflow-y:auto;padding:16px}
@@ -93,7 +107,6 @@ input[type=color]{width:38px;height:34px;border:1px solid #d1d5db;border-radius:
   <button class="furn-btn" onclick="selFurn(this,'closet')"><span class="fi">👕</span>収納</button>
   <button class="furn-btn" onclick="selFurn(this,'tv')"><span class="fi">📺</span>テレビ台</button>
   <button class="furn-btn" onclick="selFurn(this,'handrail')"><span class="fi">🦯</span>手すり</button>
-  <button class="furn-btn" onclick="selFurn(this,'wheelchair')"><span class="fi">♿</span>車いす</button>
 </div>
 <div id="scale-bar">
   <label>縮尺:</label>
@@ -108,37 +121,60 @@ input[type=color]{width:38px;height:34px;border:1px solid #d1d5db;border-radius:
     <span id="ruler-label">4m</span>
   </div>
 </div>
-<div id="canvas-wrap">
-  <canvas id="canvas"></canvas>
+
+<div id="main-area">
+  <div id="canvas-wrap"><canvas id="canvas"></canvas></div>
+
+  <!-- サイドパネル（右側） -->
   <div id="props">
-    <h3>📝 オブジェクトの設定 <button id="props-close" onclick="closeProps()">×</button></h3>
-    <div class="pr"><label>名前</label><input type="text" id="lbl-input" placeholder="部屋名など" oninput="updLabel(this.value)"></div>
-    <div class="clr-row">
-      <div class="clr-item"><label>背景</label><input type="color" id="fill-c" value="#dbeafe" onchange="updFill(this.value)"></div>
-      <div class="clr-item"><label>線</label><input type="color" id="stroke-c" value="#1e3a5f" onchange="updStroke(this.value)"></div>
+    <div id="props-inner">
+      <h3>設定 <button id="props-close" onclick="closeProps()">×</button></h3>
+      <div class="pr">
+        <label>名前</label>
+        <input type="text" id="lbl-input" placeholder="部屋名など" oninput="updLabel(this.value)">
+      </div>
+      <div class="size-row" id="size-row">
+        <div class="size-item">
+          <label>幅(px)</label>
+          <input type="number" class="size-input" id="size-w" min="20" step="20" onchange="updSize()">
+        </div>
+        <div class="size-item">
+          <label>高(px)</label>
+          <input type="number" class="size-input" id="size-h" min="20" step="20" onchange="updSize()">
+        </div>
+      </div>
+      <div class="clr-row">
+        <div class="clr-item"><label>背景</label><input type="color" id="fill-c" value="#dbeafe" onchange="updFill(this.value)"></div>
+        <div class="clr-item"><label>線色</label><input type="color" id="stroke-c" value="#1e3a5f" onchange="updStroke(this.value)"></div>
+      </div>
+      <div class="rot-row" id="rot-row">
+        <label>回転</label>
+        <button class="rot-btn" onclick="rotate(-90)">↺</button>
+        <button class="rot-btn" onclick="rotate(90)">↻</button>
+        <button class="rot-btn" onclick="rotate(45)" style="font-size:11px">45°</button>
+        <div class="rot-val" id="rot-val">0°</div>
+      </div>
+      <button class="del-btn" onclick="delSel()"><i class="ti ti-trash"></i>削除</button>
     </div>
-    <div class="rot-row" id="rot-row">
-      <label style="font-size:11px;color:#6b7280;min-width:34px">回転</label>
-      <button class="rot-btn" onclick="rotate(-90)">↺</button>
-      <button class="rot-btn" onclick="rotate(90)">↻</button>
-      <span class="rot-val" id="rot-val">0°</span>
-      <button class="rot-btn" onclick="rotate(45)" style="font-size:13px">45°</button>
-    </div>
-    <button class="del-btn" onclick="delSel()"><i class="ti ti-trash"></i>このオブジェクトを削除</button>
   </div>
 </div>
+
 <div id="status">「選択/移動」でタップして選択・ドラッグで移動</div>
 
 <div id="tpl-modal">
   <div id="tpl-sheet">
     <h2>テンプレートを選択 <button id="tpl-close" onclick="closeTpl()">×</button></h2>
     <div class="tpl-grid">
-      <div class="tpl-card" onclick="loadTpl('bedroom')"><div class="tpl-icon">🛏</div><div class="tpl-name">個室（寝室）</div><div class="tpl-desc">ベッド・収納・デスク</div></div>
-      <div class="tpl-card" onclick="loadTpl('living')"><div class="tpl-icon">🛋</div><div class="tpl-name">リビング</div><div class="tpl-desc">ソファ・テーブル・TV</div></div>
-      <div class="tpl-card" onclick="loadTpl('bathroom')"><div class="tpl-icon">🛁</div><div class="tpl-name">浴室・トイレ</div><div class="tpl-desc">浴槽・トイレ・洗面台</div></div>
-      <div class="tpl-card" onclick="loadTpl('care')"><div class="tpl-icon">♿</div><div class="tpl-name">介護部屋</div><div class="tpl-desc">ベッド・手すり・車いす</div></div>
-      <div class="tpl-card" onclick="loadTpl('1ldk')"><div class="tpl-icon">🏠</div><div class="tpl-name">1LDK間取り</div><div class="tpl-desc">LDK＋洋室＋水回り</div></div>
-      <div class="tpl-card" onclick="loadTpl('2k')"><div class="tpl-icon">🏡</div><div class="tpl-name">2K間取り</div><div class="tpl-desc">2室＋キッチン</div></div>
+      <div class="tpl-card" onclick="loadTpl('yuryo')"><div class="tpl-icon">🏥</div><div class="tpl-name">一人部屋</div><div class="tpl-desc">居室＋トイレ・収納・洗面台</div></div>
+      <div class="tpl-card" onclick="loadTpl('futari')"><div class="tpl-icon">🏥</div><div class="tpl-name">二人部屋</div><div class="tpl-desc">居室（2床）＋トイレ・収納・洗面台</div></div>
+      <div class="tpl-card" onclick="loadTpl('1k')"><div class="tpl-icon">🏠</div><div class="tpl-name">1K</div><div class="tpl-desc">洋室＋キッチン・水回り</div></div>
+      <div class="tpl-card" onclick="loadTpl('2k')"><div class="tpl-icon">🏗</div><div class="tpl-name">2K</div><div class="tpl-desc">2室＋キッチン</div></div>
+      <div class="tpl-card" onclick="loadTpl('2dk')"><div class="tpl-icon">🏡</div><div class="tpl-name">2DK</div><div class="tpl-desc">2室＋DK・水回り</div></div>
+      <div class="tpl-card" onclick="loadTpl('1ldk')"><div class="tpl-icon">🏘</div><div class="tpl-name">1LDK</div><div class="tpl-desc">LDK＋洋室＋水回り</div></div>
+      <div class="tpl-card" onclick="loadTpl('2ldk')"><div class="tpl-icon">🏠</div><div class="tpl-name">2LDK</div><div class="tpl-desc">LDK＋2室＋水回り</div></div>
+      <div class="tpl-card" onclick="loadTpl('3ldk')"><div class="tpl-icon">🏡</div><div class="tpl-name">3LDK</div><div class="tpl-desc">LDK＋3室＋水回り</div></div>
+      <div class="tpl-card" onclick="loadTpl('house2f')"><div class="tpl-icon">🏘</div><div class="tpl-name">戸建て（2階建て）</div><div class="tpl-desc">1F:LDK・水回り　2F:2室</div></div>
+      <div class="tpl-card" onclick="loadTpl('house3f')"><div class="tpl-icon">🏢</div><div class="tpl-name">戸建て（3階建て）</div><div class="tpl-desc">1F:LDK　2F:2室　3F:1室</div></div>
     </div>
   </div>
 </div>
@@ -165,13 +201,10 @@ function rawMpt(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.l
 
 function selFurn(el,f){furn=f;document.querySelectorAll('.furn-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
 function updateScale(){
-  const v=parseInt(document.getElementById('scale-select').value);
-  scalePx=v;
-  const rulerPx=4*GRID;
-  const rulerM=(rulerPx/v).toFixed(rulerPx/v<1?1:0);
+  const v=parseInt(document.getElementById('scale-select').value);scalePx=v;
+  const rulerPx=4*GRID,rulerM=(rulerPx/v).toFixed(rulerPx/v<1?1:0);
   document.getElementById('ruler-line').style.width=rulerPx+'px';
-  document.getElementById('ruler-label').textContent=rulerM+'m';
-  draw();
+  document.getElementById('ruler-label').textContent=rulerM+'m';draw();
 }
 function setTool(t){
   tool=t;
@@ -179,44 +212,35 @@ function setTool(t){
   document.getElementById('btn-'+t)?.classList.add('active');
   document.getElementById('furn-row').style.display=t==='furniture'?'flex':'none';
   selected=null;closeProps();draw();
-  const m={
-    select:'タップで選択・ドラッグで移動',
-    room:'スワイプして部屋を描く',wall:'スワイプして壁を引く',
-    door:'タップして開きドアを置く',slidedoor:'タップして引き戸を置く',
-    window:'タップして窓を置く',furniture:'家具を選んでタップ',text:'タップしてテキスト入力'
-  };
+  const m={select:'タップで選択・ドラッグで移動',room:'スワイプして部屋を描く',wall:'スワイプして壁を引く',door:'タップして開きドアを置く',slidedoor:'タップして引き戸を置く',window:'タップして窓を置く',furniture:'家具を選んでタップ',text:'タップしてテキスト入力'};
   st(m[t]||'');
 }
 function st(m){document.getElementById('status').textContent=m;}
 function ph(){history.push(JSON.parse(JSON.stringify(shapes)));}
 
-/* ─── draw ─── */
+/* ─── 描画順: 部屋を一番下、壁・ドアを中間、家具・テキストを上 ─── */
+function sortedShapes(){
+  const order={room:0,wall:1,door:2,slidedoor:2,window:2,furniture:3,text:4};
+  return [...shapes].sort((a,b)=>(order[a.type]||0)-(order[b.type]||0));
+}
+
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
   drawGrid();
-  shapes.forEach(s=>ds(s,false));
+  sortedShapes().forEach(s=>ds(s,false));
   if(preview)ds(preview,true);
   if(selected)drawSel(selected);
-  drawScaleOverlay();
 }
+
 function drawGrid(){
   ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.lineWidth=0.5;
   for(let x=0;x<=canvas.width;x+=GRID){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}
   for(let y=0;y<=canvas.height;y+=GRID){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
 }
-function drawScaleOverlay(){
-  if(selected&&selected.type==='room'&&scalePx>0){
-    const wm=(selected.w/scalePx).toFixed(1),hm=(selected.h/scalePx).toFixed(1);
-    ctx.fillStyle='#0369a1';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';
-    ctx.fillText(wm+'m',selected.x+selected.w/2,selected.y-4);
-    ctx.save();ctx.translate(selected.x-4,selected.y+selected.h/2);ctx.rotate(-Math.PI/2);
-    ctx.fillText(hm+'m',0,0);ctx.restore();
-  }
-}
+
 function withRot(s,fn){
-  const rot=s.rot||0;
-  if(rot===0){fn();return;}
+  const rot=s.rot||0;if(rot===0){fn();return;}
   const cx=s.type==='wall'?(s.x1+s.x2)/2:s.x+(s.w||0)/2;
   const cy=s.type==='wall'?(s.y1+s.y2)/2:s.y+(s.h||0)/2;
   ctx.save();ctx.translate(cx,cy);ctx.rotate(rot*Math.PI/180);ctx.translate(-cx,-cy);fn();ctx.restore();
@@ -233,26 +257,15 @@ function ds(s,ip){
       ctx.strokeStyle=s.stroke||'#1e3a5f';ctx.lineWidth=s.sw||5;ctx.lineCap='round';
       ctx.beginPath();ctx.moveTo(s.x1,s.y1);ctx.lineTo(s.x2,s.y2);ctx.stroke();
     }else if(s.type==='door'){
-      /* 開きドア：壁部分＋1/4円弧 */
-      const sz=s.w||40;
-      ctx.strokeStyle=s.stroke||'#1e3a5f';ctx.lineWidth=2;ctx.fillStyle='rgba(255,255,255,0.7)';
-      /* 扉本体（細い矩形） */
+      const sz=s.w||40;ctx.strokeStyle=s.stroke||'#1e3a5f';ctx.lineWidth=2;ctx.fillStyle='rgba(255,255,255,0.7)';
       ctx.beginPath();ctx.rect(s.x,s.y,8,sz);ctx.fill();ctx.stroke();
-      /* 1/4円弧（扉の開き軌跡） */
       ctx.beginPath();ctx.moveTo(s.x+8,s.y);ctx.arc(s.x+8,s.y+sz,sz-8,Math.PI*1.5,0,false);ctx.stroke();
-      /* 扉ライン */
       ctx.beginPath();ctx.moveTo(s.x+8,s.y);ctx.lineTo(s.x+8+sz-8,s.y+sz);ctx.stroke();
       if(s.label){ctx.fillStyle='#1e3a5f';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText(s.label,s.x+sz/2,s.y-6);}
     }else if(s.type==='slidedoor'){
-      /* 引き戸：2本線＋矢印 */
-      const sz=s.w||60;
-      ctx.strokeStyle=s.stroke||'#1e3a5f';ctx.lineWidth=2;ctx.fillStyle='rgba(219,234,254,0.7)';
-      /* 枠 */
+      const sz=s.w||60;ctx.strokeStyle=s.stroke||'#1e3a5f';ctx.lineWidth=2;ctx.fillStyle='rgba(219,234,254,0.7)';
       ctx.beginPath();ctx.rect(s.x,s.y,sz,16);ctx.fill();ctx.stroke();
-      /* 戸板（左寄り） */
-      ctx.fillStyle='rgba(255,255,255,0.9)';
-      ctx.beginPath();ctx.rect(s.x+2,s.y+2,sz*0.55,12);ctx.fill();ctx.stroke();
-      /* 矢印 */
+      ctx.fillStyle='rgba(255,255,255,0.9)';ctx.beginPath();ctx.rect(s.x+2,s.y+2,sz*0.55,12);ctx.fill();ctx.stroke();
       ctx.strokeStyle='#6b7280';ctx.lineWidth=1;
       const ax=s.x+sz*0.7,ay=s.y+8;
       ctx.beginPath();ctx.moveTo(ax-10,ay);ctx.lineTo(ax+10,ay);ctx.stroke();
@@ -292,16 +305,11 @@ function drawSel(s){
   ctx.setLineDash([]);
 }
 
-/* ─── hit test ─── */
-function rotPt(px,py,cx,cy,deg){
-  const r=deg*Math.PI/180,cos=Math.cos(r),sin=Math.sin(r);
-  return{x:cx+(px-cx)*cos-(py-cy)*sin,y:cy+(px-cx)*sin+(py-cy)*cos};
-}
+function rotPt(px,py,cx,cy,deg){const r=deg*Math.PI/180,cos=Math.cos(r),sin=Math.sin(r);return{x:cx+(px-cx)*cos-(py-cy)*sin,y:cy+(px-cx)*sin+(py-cy)*cos};}
 function getCx(s){return s.type==='wall'?(s.x1+s.x2)/2:s.x+(s.w||60)/2;}
 function getCy(s){return s.type==='wall'?(s.y1+s.y2)/2:s.y+(s.h||60)/2;}
 function hit(s,x,y){
-  const rot=s.rot||0;
-  if(rot!==0){const p=rotPt(x,y,getCx(s),getCy(s),-rot);x=p.x;y=p.y;}
+  const rot=s.rot||0;if(rot!==0){const p=rotPt(x,y,getCx(s),getCy(s),-rot);x=p.x;y=p.y;}
   if(s.type==='room')return x>=s.x&&x<=s.x+s.w&&y>=s.y&&y<=s.y+s.h;
   if(s.type==='wall'){const dx=s.x2-s.x1,dy=s.y2-s.y1,l2=dx*dx+dy*dy;if(l2===0)return Math.hypot(x-s.x1,y-s.y1)<12;const t=Math.max(0,Math.min(1,((x-s.x1)*dx+(y-s.y1)*dy)/l2));return Math.hypot(x-s.x1-t*dx,y-s.y1-t*dy)<12;}
   if(s.type==='furniture')return x>=s.x&&x<=s.x+s.w&&y>=s.y&&y<=s.y+s.h;
@@ -312,26 +320,28 @@ function hit(s,x,y){
   return false;
 }
 
-/* ─── touch/mouse events ─── */
-let touchStartPt=null,touchMoved=false;
+/* ─── ヒットテストは描画順の逆（上にあるものを優先）─── */
+function hitSorted(x,y){
+  const order={room:0,wall:1,door:2,slidedoor:2,window:2,furniture:3,text:4};
+  const sorted=[...shapes].sort((a,b)=>(order[b.type]||0)-(order[a.type]||0));
+  return sorted.find(s=>hit(s,x,y))||null;
+}
 
+let touchStartPt=null,touchMoved=false;
 function onS(p,raw){
   touchStartPt=raw;touchMoved=false;
   if(tool==='select'){
-    const h=[...shapes].reverse().find(s=>hit(s,p.x,p.y));
+    const h=hitSorted(p.x,p.y);
     selected=h||null;
     if(selected){
       dragging=true;
-      if(selected.type==='wall') dragOff={x:p.x-selected.x1,y:p.y-selected.y1};
+      if(selected.type==='wall')dragOff={x:p.x-selected.x1,y:p.y-selected.y1};
       else dragOff={x:p.x-selected.x,y:p.y-selected.y};
       showP();
-    } else {
-      closeProps();
-    }
+    }else{closeProps();}
     draw();return;
   }
   drawing=true;sx=p.x;sy=p.y;
-  /* instant-place tools */
   if(tool==='door'){ph();shapes.push({type:'door',x:p.x,y:p.y,w:40,sw:2,stroke:'#1e3a5f',fill:'#fff',label:'',rot:0});selected=shapes[shapes.length-1];showP();draw();drawing=false;}
   else if(tool==='slidedoor'){ph();shapes.push({type:'slidedoor',x:p.x,y:p.y,w:80,sw:2,stroke:'#1e3a5f',fill:'#bfdbfe',label:'',rot:0});selected=shapes[shapes.length-1];showP();draw();drawing=false;}
   else if(tool==='window'){ph();shapes.push({type:'window',x:p.x,y:p.y,w:60,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0});selected=shapes[shapes.length-1];showP();draw();drawing=false;}
@@ -350,7 +360,7 @@ function onS(p,raw){
 
 function onM(p,raw){
   if(raw&&touchStartPt){const dx=raw.x-touchStartPt.x,dy=raw.y-touchStartPt.y;if(Math.hypot(dx,dy)>6)touchMoved=true;}
-  if(dragging&&selected&&touchMoved){
+  if(dragging&&selected&&(touchMoved||true)){
     if(selected.type==='wall'){const dx=p.x-dragOff.x-selected.x1,dy=p.y-dragOff.y-selected.y1;selected.x1+=dx;selected.y1+=dy;selected.x2+=dx;selected.y2+=dy;dragOff={x:p.x-selected.x1,y:p.y-selected.y1};}
     else{selected.x=p.x-dragOff.x;selected.y=p.y-dragOff.y;}
     draw();return;
@@ -374,32 +384,54 @@ function onE(p){
 canvas.addEventListener('touchstart',e=>{e.preventDefault();onS(tpt(e),rawTpt(e));},{passive:false});
 canvas.addEventListener('touchmove',e=>{e.preventDefault();onM(tpt(e),rawTpt(e));},{passive:false});
 canvas.addEventListener('touchend',e=>{e.preventDefault();onE(tpt(e));},{passive:false});
-canvas.addEventListener('mousedown',e=>{onS(mpt(e),rawMpt(e));});
-canvas.addEventListener('mousemove',e=>{onM(mpt(e),rawMpt(e));});
+canvas.addEventListener('mousedown',e=>onS(mpt(e),rawMpt(e)));
+canvas.addEventListener('mousemove',e=>onM(mpt(e),rawMpt(e)));
 canvas.addEventListener('mouseup',e=>onE(mpt(e)));
 
-/* ─── props ─── */
+/* ─── プロパティパネル ─── */
 function showP(){
-  document.getElementById('props').style.display='block';
+  const p=document.getElementById('props');
+  p.classList.add('open');
   document.getElementById('lbl-input').value=selected?.label||'';
   document.getElementById('fill-c').value=selected?.fill||'#dbeafe';
   document.getElementById('stroke-c').value=selected?.stroke||'#1e3a5f';
   document.getElementById('rot-val').textContent=(selected?.rot||0)+'°';
+  // サイズ入力：部屋・家具・ドア・引き戸・窓
+  const sizeRow=document.getElementById('size-row');
+  const hasSize=['room','furniture','door','slidedoor','window'].includes(selected?.type);
+  sizeRow.style.display=hasSize?'flex':'none';
+  if(hasSize){
+    document.getElementById('size-w').value=selected.w||60;
+    document.getElementById('size-h').value=selected.h||selected.w||60;
+    // 高さ入力は幅しかないタイプは非表示
+    document.getElementById('size-h').parentElement.style.display=['door','slidedoor','window'].includes(selected?.type)?'none':'flex';
+  }
   document.getElementById('rot-row').style.display=selected?.type==='wall'?'none':'flex';
+  setTimeout(()=>resize(),10);
 }
-function closeProps(){document.getElementById('props').style.display='none';}
+function closeProps(){
+  document.getElementById('props').classList.remove('open');
+  setTimeout(()=>resize(),210);
+}
 function updLabel(v){if(selected){selected.label=v;draw();}}
 function updFill(v){if(selected){selected.fill=v;draw();}}
 function updStroke(v){if(selected){selected.stroke=v;draw();}}
+function updSize(){
+  if(!selected)return;
+  const w=parseInt(document.getElementById('size-w').value)||20;
+  const h=parseInt(document.getElementById('size-h').value)||20;
+  selected.w=Math.max(20,Math.round(w/20)*20);
+  if(!['door','slidedoor','window'].includes(selected.type))selected.h=Math.max(20,Math.round(h/20)*20);
+  draw();
+}
 function rotate(deg){if(!selected)return;ph();selected.rot=((selected.rot||0)+deg+360)%360;document.getElementById('rot-val').textContent=selected.rot+'°';draw();}
 function delSel(){if(!selected)return;ph();shapes=shapes.filter(s=>s!==selected);selected=null;closeProps();draw();}
 function undo(){if(!history.length)return;shapes=history.pop();selected=null;closeProps();draw();st('元に戻しました');}
 function clearAll(){if(!confirm('すべてクリアしますか?'))return;ph();shapes=[];selected=null;closeProps();draw();}
 
-/* ─── JPEG: 描画範囲のみクロップ ─── */
+/* ─── JPEG保存（描画範囲のみ） ─── */
 function saveJpeg(){
   if(shapes.length===0){alert('まず図を描いてください');return;}
-  // バウンディングボックスを計算
   let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
   shapes.forEach(s=>{
     let x1,y1,x2,y2;
@@ -413,15 +445,212 @@ function saveJpeg(){
   maxX=Math.min(canvas.width,maxX+PAD);maxY=Math.min(canvas.height,maxY+PAD);
   const W=maxX-minX,H=maxY-minY;
   const tmp=document.createElement('canvas');tmp.width=W;tmp.height=H;
-  const tc=tmp.getContext('2d');
-  tc.fillStyle='#fff';tc.fillRect(0,0,W,H);
-  tc.drawImage(canvas,minX,minY,W,H,0,0,W,H);
+  const tc=tmp.getContext('2d');tc.fillStyle='#fff';tc.fillRect(0,0,W,H);tc.drawImage(canvas,minX,minY,W,H,0,0,W,H);
   const a=document.createElement('a');a.download='floor-plan.jpg';a.href=tmp.toDataURL('image/jpeg',0.95);a.click();
   st('描画範囲のみJPEGで保存しました！');
 }
 
-/* ─── Templates ─── */
+/* ─── テンプレート ─── */
 const TEMPLATES={
+  '1k':[
+    {type:'room',x:20,y:20,w:200,h:180,fill:'#dbeafe',stroke:'#1e3a5f',sw:2,label:'洋室',rot:0},
+    {type:'room',x:20,y:220,w:120,h:80,fill:'#fef9c3',stroke:'#854d0e',sw:2,label:'キッチン',rot:0},
+    {type:'room',x:160,y:220,w:80,h:80,fill:'#e0f2fe',stroke:'#0c4a6e',sw:2,label:'水回り',rot:0},
+    {type:'furniture',ftype:'bed',x:40,y:40,w:80,h:120,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'desk',x:140,y:40,w:60,h:60,fill:'#fef9c3',stroke:'#854d0e',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'closet',x:140,y:120,w:60,h:40,fill:'#fce7f3',stroke:'#9d174d',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'toilet',x:165,y:230,w:40,h:60,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'sink',x:165,y:240,w:40,h:40,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'',rot:0},
+    {type:'door',x:20,y:160,w:40,sw:2,stroke:'#1e3a5f',fill:'#fff',label:'',rot:0},
+    {type:'slidedoor',x:20,y:220,w:60,sw:2,stroke:'#854d0e',fill:'#fef9c3',label:'',rot:0},
+    {type:'window',x:80,y:20,w:100,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+  ],
+  '2dk':[
+    {type:'room',x:20,y:20,w:180,h:160,fill:'#dbeafe',stroke:'#1e3a5f',sw:2,label:'洋室①',rot:0},
+    {type:'room',x:220,y:20,w:160,h:160,fill:'#fce7f3',stroke:'#9d174d',sw:2,label:'洋室②',rot:0},
+    {type:'room',x:20,y:200,w:240,h:120,fill:'#dcfce7',stroke:'#14532d',sw:2,label:'DK',rot:0},
+    {type:'room',x:280,y:200,w:100,h:120,fill:'#e0f2fe',stroke:'#0c4a6e',sw:2,label:'水回り',rot:0},
+    {type:'furniture',ftype:'bed',x:40,y:40,w:80,h:100,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'desk',x:160,y:40,w:40,h:60,fill:'#fef9c3',stroke:'#854d0e',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bed',x:240,y:40,w:80,h:100,fill:'#fce7f3',stroke:'#9d174d',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'table',x:60,y:230,w:80,h:60,fill:'#fef9c3',stroke:'#854d0e',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'toilet',x:290,y:210,w:40,h:60,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'sink',x:290,y:270,w:40,h:40,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bath',x:330,y:210,w:40,h:80,fill:'#bfdbfe',stroke:'#1d4ed8',sw:1.5,label:'',rot:0},
+    {type:'door',x:20,y:140,w:40,sw:2,stroke:'#1e3a5f',fill:'#fff',label:'',rot:0},
+    {type:'door',x:220,y:140,w:40,sw:2,stroke:'#9d174d',fill:'#fff',label:'',rot:0},
+    {type:'slidedoor',x:20,y:200,w:80,sw:2,stroke:'#14532d',fill:'#dcfce7',label:'',rot:0},
+    {type:'window',x:60,y:20,w:100,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:240,y:20,w:100,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+  ],
+  'yuryo':[
+    /* 居室（メイン） */
+    {type:'room',x:20,y:20,w:220,h:200,fill:'#fef9c3',stroke:'#713f12',sw:2,label:'居室',rot:0},
+    /* トイレ（居室内、右上） */
+    {type:'room',x:160,y:20,w:80,h:80,fill:'#e0f2fe',stroke:'#0c4a6e',sw:2,label:'トイレ',rot:0},
+    /* 収納（入口横） */
+    {type:'room',x:20,y:240,w:80,h:60,fill:'#f3f4f6',stroke:'#6b7280',sw:2,label:'収納',rot:0},
+    /* 入口 */
+    {type:'room',x:120,y:240,w:120,h:60,fill:'#f9fafb',stroke:'#9ca3af',sw:2,label:'入口',rot:0},
+    /* ベッド */
+    {type:'furniture',ftype:'bed',x:30,y:100,w:100,h:120,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    /* 洗面台（居室内） */
+    {type:'furniture',ftype:'sink',x:140,y:120,w:40,h:40,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'洗面台',rot:0},
+    /* TV台 */
+    {type:'furniture',ftype:'tv',x:140,y:170,w:60,h:40,fill:'#f1f5f9',stroke:'#334155',sw:1.5,label:'',rot:0},
+    /* トイレ器具 */
+    {type:'furniture',ftype:'toilet',x:170,y:30,w:40,h:55,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'',rot:0},
+    /* 手すり：トイレ */
+    {type:'furniture',ftype:'handrail',x:160,y:75,w:80,h:12,fill:'#fde68a',stroke:'#92400e',sw:2,label:'手すり',rot:0},
+    /* 引き戸（居室→入口） */
+    {type:'slidedoor',x:80,y:220,w:80,sw:2,stroke:'#713f12',fill:'#fde68a',label:'引き戸',rot:0},
+    /* ドア（トイレ） */
+    {type:'door',x:160,y:80,w:36,sw:2,stroke:'#0c4a6e',fill:'#fff',label:'',rot:0},
+    /* 玄関ドア */
+    {type:'door',x:200,y:240,w:40,sw:2,stroke:'#6b7280',fill:'#fff',label:'玄関',rot:0},
+    /* 窓 */
+    {type:'window',x:20,y:20,w:100,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+  ],
+  'futari':[
+    /* 居室（広め） */
+    {type:'room',x:20,y:20,w:300,h:200,fill:'#fef9c3',stroke:'#713f12',sw:2,label:'居室（二人部屋）',rot:0},
+    /* トイレ（居室内、右上） */
+    {type:'room',x:220,y:20,w:100,h:80,fill:'#e0f2fe',stroke:'#0c4a6e',sw:2,label:'トイレ',rot:0},
+    /* 収納（入口横） */
+    {type:'room',x:20,y:240,w:80,h:60,fill:'#f3f4f6',stroke:'#6b7280',sw:2,label:'収納',rot:0},
+    /* 入口 */
+    {type:'room',x:120,y:240,w:200,h:60,fill:'#f9fafb',stroke:'#9ca3af',sw:2,label:'入口',rot:0},
+    /* ベッド① */
+    {type:'furniture',ftype:'bed',x:30,y:40,w:100,h:120,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'ベッド①',rot:0},
+    /* ベッド② */
+    {type:'furniture',ftype:'bed',x:30,y:180,w:100,h:120,fill:'#fce7f3',stroke:'#9d174d',sw:1.5,label:'ベッド②',rot:0},
+    /* 洗面台（居室内） */
+    {type:'furniture',ftype:'sink',x:145,y:130,w:40,h:40,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'洗面台',rot:0},
+    /* TV台 */
+    {type:'furniture',ftype:'tv',x:145,y:180,w:60,h:40,fill:'#f1f5f9',stroke:'#334155',sw:1.5,label:'',rot:0},
+    /* トイレ器具 */
+    {type:'furniture',ftype:'toilet',x:230,y:30,w:40,h:55,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'',rot:0},
+    /* 手すり：トイレ */
+    {type:'furniture',ftype:'handrail',x:220,y:76,w:100,h:12,fill:'#fde68a',stroke:'#92400e',sw:2,label:'手すり',rot:0},
+    /* 引き戸（居室→入口） */
+    {type:'slidedoor',x:100,y:220,w:80,sw:2,stroke:'#713f12',fill:'#fde68a',label:'引き戸',rot:0},
+    /* ドア（トイレ） */
+    {type:'door',x:220,y:88,w:36,sw:2,stroke:'#0c4a6e',fill:'#fff',label:'',rot:0},
+    /* 玄関ドア */
+    {type:'door',x:270,y:240,w:40,sw:2,stroke:'#6b7280',fill:'#fff',label:'玄関',rot:0},
+    /* 窓 */
+    {type:'window',x:20,y:20,w:160,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+  ],
+  '2ldk':[
+    {type:'room',x:20,y:20,w:300,h:140,fill:'#dcfce7',stroke:'#14532d',sw:2,label:'LDK',rot:0},
+    {type:'room',x:20,y:180,w:140,h:120,fill:'#dbeafe',stroke:'#1e3a5f',sw:2,label:'洋室①',rot:0},
+    {type:'room',x:180,y:180,w:140,h:120,fill:'#fce7f3',stroke:'#9d174d',sw:2,label:'洋室②',rot:0},
+    {type:'room',x:320,y:20,w:80,h:140,fill:'#e0f2fe',stroke:'#0c4a6e',sw:2,label:'水回り',rot:0},
+    {type:'furniture',ftype:'sofa',x:40,y:40,w:120,h:50,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'table',x:60,y:110,w:80,h:40,fill:'#fef9c3',stroke:'#854d0e',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'tv',x:220,y:30,w:80,h:40,fill:'#f1f5f9',stroke:'#334155',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bed',x:30,y:200,w:80,h:80,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bed',x:190,y:200,w:80,h:80,fill:'#fce7f3',stroke:'#9d174d',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bath',x:330,y:30,w:60,h:80,fill:'#bfdbfe',stroke:'#1d4ed8',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'toilet',x:335,y:120,w:40,h:55,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'',rot:0},
+    {type:'door',x:20,y:140,w:40,sw:2,stroke:'#14532d',fill:'#fff',label:'',rot:0},
+    {type:'door',x:20,y:280,w:40,sw:2,stroke:'#1e3a5f',fill:'#fff',label:'',rot:0},
+    {type:'door',x:180,y:280,w:40,sw:2,stroke:'#9d174d',fill:'#fff',label:'',rot:0},
+    {type:'window',x:80,y:20,w:120,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:40,y:180,w:80,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:200,y:180,w:80,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+  ],
+  '3ldk':[
+    {type:'room',x:20,y:20,w:300,h:140,fill:'#dcfce7',stroke:'#14532d',sw:2,label:'LDK',rot:0},
+    {type:'room',x:20,y:180,w:120,h:120,fill:'#dbeafe',stroke:'#1e3a5f',sw:2,label:'洋室①',rot:0},
+    {type:'room',x:160,y:180,w:120,h:120,fill:'#fce7f3',stroke:'#9d174d',sw:2,label:'洋室②',rot:0},
+    {type:'room',x:300,y:180,w:120,h:120,fill:'#ede9fe',stroke:'#5b21b6',sw:2,label:'洋室③',rot:0},
+    {type:'room',x:320,y:20,w:100,h:140,fill:'#e0f2fe',stroke:'#0c4a6e',sw:2,label:'水回り',rot:0},
+    {type:'furniture',ftype:'sofa',x:40,y:40,w:120,h:50,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'table',x:60,y:110,w:80,h:40,fill:'#fef9c3',stroke:'#854d0e',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'tv',x:230,y:30,w:80,h:40,fill:'#f1f5f9',stroke:'#334155',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bed',x:30,y:200,w:80,h:80,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bed',x:170,y:200,w:80,h:80,fill:'#fce7f3',stroke:'#9d174d',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'desk',x:310,y:200,w:60,h:60,fill:'#ede9fe',stroke:'#5b21b6',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bath',x:330,y:30,w:60,h:80,fill:'#bfdbfe',stroke:'#1d4ed8',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'toilet',x:335,y:120,w:40,h:55,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'',rot:0},
+    {type:'door',x:20,y:140,w:40,sw:2,stroke:'#14532d',fill:'#fff',label:'',rot:0},
+    {type:'door',x:20,y:280,w:40,sw:2,stroke:'#1e3a5f',fill:'#fff',label:'',rot:0},
+    {type:'door',x:160,y:280,w:40,sw:2,stroke:'#9d174d',fill:'#fff',label:'',rot:0},
+    {type:'door',x:300,y:280,w:40,sw:2,stroke:'#5b21b6',fill:'#fff',label:'',rot:0},
+    {type:'window',x:80,y:20,w:120,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:30,y:180,w:80,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:170,y:180,w:80,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:310,y:180,w:80,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+  ],
+  'house2f':[
+    /* 1階 */
+    {type:'room',x:20,y:20,w:60,h:30,fill:'#f9fafb',stroke:'#6b7280',sw:2,label:'玄関',rot:0},
+    {type:'room',x:20,y:70,w:260,h:160,fill:'#dcfce7',stroke:'#14532d',sw:2,label:'LDK（1F）',rot:0},
+    {type:'room',x:300,y:70,w:80,h:80,fill:'#e0f2fe',stroke:'#0c4a6e',sw:2,label:'浴室',rot:0},
+    {type:'room',x:300,y:170,w:80,h:60,fill:'#f0fdf4',stroke:'#15803d',sw:2,label:'トイレ',rot:0},
+    /* 2階 */
+    {type:'room',x:20,y:280,w:180,h:140,fill:'#dbeafe',stroke:'#1e3a5f',sw:2,label:'洋室①（2F）',rot:0},
+    {type:'room',x:220,y:280,w:160,h:140,fill:'#fce7f3',stroke:'#9d174d',sw:2,label:'洋室②（2F）',rot:0},
+    /* 家具1F */
+    {type:'furniture',ftype:'sofa',x:40,y:100,w:120,h:50,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'table',x:60,y:170,w:80,h:40,fill:'#fef9c3',stroke:'#854d0e',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bath',x:310,y:80,w:60,h:60,fill:'#bfdbfe',stroke:'#1d4ed8',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'toilet',x:310,y:180,w:40,h:50,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'',rot:0},
+    /* 家具2F */
+    {type:'furniture',ftype:'bed',x:30,y:300,w:80,h:100,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bed',x:230,y:300,w:80,h:100,fill:'#fce7f3',stroke:'#9d174d',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'desk',x:130,y:300,w:60,h:60,fill:'#fef9c3',stroke:'#854d0e',sw:1.5,label:'',rot:0},
+    /* ドア・窓 */
+    {type:'door',x:20,y:50,w:40,sw:2,stroke:'#6b7280',fill:'#fff',label:'玄関',rot:0},
+    {type:'door',x:20,y:200,w:40,sw:2,stroke:'#14532d',fill:'#fff',label:'',rot:0},
+    {type:'door',x:20,y:360,w:40,sw:2,stroke:'#1e3a5f',fill:'#fff',label:'',rot:0},
+    {type:'door',x:220,y:360,w:40,sw:2,stroke:'#9d174d',fill:'#fff',label:'',rot:0},
+    {type:'window',x:100,y:70,w:120,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:30,y:280,w:100,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:230,y:280,w:100,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    /* 階段ラベル */
+    {type:'text',x:260,y:120,label:'▲階段',sw:12,stroke:'#6b7280',rot:0},
+    {type:'text',x:180,y:320,label:'▼階段',sw:12,stroke:'#6b7280',rot:0},
+  ],
+  'house3f':[
+    /* 1階 */
+    {type:'room',x:20,y:20,w:60,h:30,fill:'#f9fafb',stroke:'#6b7280',sw:2,label:'玄関',rot:0},
+    {type:'room',x:20,y:70,w:240,h:140,fill:'#dcfce7',stroke:'#14532d',sw:2,label:'LDK（1F）',rot:0},
+    {type:'room',x:280,y:70,w:80,h:80,fill:'#e0f2fe',stroke:'#0c4a6e',sw:2,label:'浴室',rot:0},
+    {type:'room',x:280,y:170,w:80,h:60,fill:'#f0fdf4',stroke:'#15803d',sw:2,label:'トイレ',rot:0},
+    /* 2階 */
+    {type:'room',x:20,y:260,w:160,h:120,fill:'#dbeafe',stroke:'#1e3a5f',sw:2,label:'洋室①（2F）',rot:0},
+    {type:'room',x:200,y:260,w:160,h:120,fill:'#fce7f3',stroke:'#9d174d',sw:2,label:'洋室②（2F）',rot:0},
+    /* 3階 */
+    {type:'room',x:20,y:430,w:180,h:120,fill:'#ede9fe',stroke:'#5b21b6',sw:2,label:'洋室③（3F）',rot:0},
+    {type:'room',x:220,y:430,w:80,h:60,fill:'#fef9c3',stroke:'#854d0e',sw:2,label:'納戸（3F）',rot:0},
+    /* 家具1F */
+    {type:'furniture',ftype:'sofa',x:40,y:90,w:100,h:50,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'table',x:50,y:160,w:80,h:40,fill:'#fef9c3',stroke:'#854d0e',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bath',x:290,y:80,w:60,h:60,fill:'#bfdbfe',stroke:'#1d4ed8',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'toilet',x:290,y:180,w:40,h:50,fill:'#f0fdf4',stroke:'#15803d',sw:1.5,label:'',rot:0},
+    /* 家具2F */
+    {type:'furniture',ftype:'bed',x:30,y:280,w:80,h:80,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'bed',x:210,y:280,w:80,h:80,fill:'#fce7f3',stroke:'#9d174d',sw:1.5,label:'',rot:0},
+    /* 家具3F */
+    {type:'furniture',ftype:'bed',x:30,y:450,w:80,h:80,fill:'#ede9fe',stroke:'#5b21b6',sw:1.5,label:'',rot:0},
+    {type:'furniture',ftype:'desk',x:130,y:450,w:60,h:60,fill:'#ede9fe',stroke:'#5b21b6',sw:1.5,label:'',rot:0},
+    /* ドア・窓 */
+    {type:'door',x:20,y:50,w:40,sw:2,stroke:'#6b7280',fill:'#fff',label:'玄関',rot:0},
+    {type:'door',x:20,y:190,w:40,sw:2,stroke:'#14532d',fill:'#fff',label:'',rot:0},
+    {type:'door',x:20,y:340,w:40,sw:2,stroke:'#1e3a5f',fill:'#fff',label:'',rot:0},
+    {type:'door',x:200,y:340,w:40,sw:2,stroke:'#9d174d',fill:'#fff',label:'',rot:0},
+    {type:'door',x:20,y:500,w:40,sw:2,stroke:'#5b21b6',fill:'#fff',label:'',rot:0},
+    {type:'window',x:80,y:70,w:120,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:30,y:260,w:100,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:210,y:260,w:100,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    {type:'window',x:30,y:430,w:100,sw:2,stroke:'#2563eb',fill:'#bfdbfe',label:'',rot:0},
+    /* 階段ラベル */
+    {type:'text',x:220,y:110,label:'▲階段',sw:12,stroke:'#6b7280',rot:0},
+    {type:'text',x:160,y:300,label:'▼▲階段',sw:12,stroke:'#6b7280',rot:0},
+    {type:'text',x:160,y:460,label:'▼階段',sw:12,stroke:'#6b7280',rot:0},
+  ],
   bedroom:[
     {type:'room',x:40,y:40,w:200,h:180,fill:'#dbeafe',stroke:'#1e3a5f',sw:2,label:'寝室',rot:0},
     {type:'furniture',ftype:'bed',x:60,y:60,w:80,h:120,fill:'#e0e7ff',stroke:'#4338ca',sw:1.5,label:'',rot:0},
